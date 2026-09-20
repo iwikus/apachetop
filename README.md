@@ -1,10 +1,10 @@
-# apachetop-ng
+# apachetop
 
 A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/`apachetop`.
 
-`apachetop-ng` reads the Apache scoreboard directly from the APR shared-memory object in `/dev/shm/ShM.*`. It does not scrape `/server-status` over HTTP.
+`apachetop` reads the Apache scoreboard directly from the APR shared-memory object in `/dev/shm/ShM.*`. It does not scrape `/server-status` over HTTP.
 
-![apachetop-ng screenshot](docs/screenshot.svg)
+![apachetop screenshot](docs/screenshot.png)
 
 ## Features
 
@@ -44,23 +44,23 @@ The exact `LoadModule` path depends on the distribution/package layout.
 gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
   -I/usr/include/apache2 \
   -I/usr/include/apr-1.0 \
-  apachetop-ng.c \
-  -o apachetop-ng
+  apachetop.c \
+  -o apachetop
 ```
 
 ## Usage
 
 ```bash
-./apachetop-ng
-./apachetop-ng -a
-./apachetop-ng -A
-./apachetop-ng -i 2
-./apachetop-ng -s age
-./apachetop-ng -s client
-./apachetop-ng -s vhost
-./apachetop-ng -r
-./apachetop-ng -f /dev/shm/ShM.8c7c8239H155cc8f9
-./apachetop-ng -1
+./apachetop
+./apachetop -a
+./apachetop -A
+./apachetop -i 2
+./apachetop -s age
+./apachetop -s client
+./apachetop -s vhost
+./apachetop -r
+./apachetop -f /dev/shm/ShM.8c7c8239H155cc8f9
+./apachetop -1
 ```
 
 ### Options
@@ -81,7 +81,7 @@ gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
 
 ## Why a direct scoreboard reader?
 
-The usual `mod_status` page is useful for humans, but it is awkward to consume from a terminal tool. `apachetop-ng` reads the same scoreboard data directly from shared memory, avoiding an HTTP request.
+The usual `mod_status` page is useful for humans, but it is awkward to consume from a terminal tool. `apachetop` reads the same scoreboard data directly from shared memory, avoiding an HTTP request. A key advantage is that it can keep working even when the server is overloaded: if Apache is full and the web-based `/server-status` endpoint is unavailable because there are no workers available to serve that request, `apachetop` can still inspect the scoreboard directly from shared memory.
 
 The program deliberately uses the Apache headers as the source of truth for `global_score`, `process_score`, and `worker_score`, and derives aligned sizes from the installed headers. This avoids hard-coding the current scoreboard structure into the application.
 
