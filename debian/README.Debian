@@ -8,8 +8,9 @@ the Apache scoreboard directly from /dev/shm/ShM.*.
 
 Apache must have mod_status loaded and ExtendedStatus On.
 
-The GitHub CI build also tests the binary against Debian 12 and Debian 13
-with the Apache prefork MPM.
+The GitHub CI build also tests the binary against Debian 12, Debian 13,
+and the currently standard-supported Ubuntu LTS releases 22.04, 24.04,
+and 26.04, all with the Apache prefork MPM.
 
 Versioning
 ----------
