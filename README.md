@@ -54,7 +54,7 @@ gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
 
 GitHub Actions builds and tests the Debian package on **Debian 12 (Bookworm)** and **Debian 13 (Trixie)**. The CI test runs Apache with the **prefork MPM**, loads **mod_status**, enables **ExtendedStatus On**, starts Apache, locates the real scoreboard under `/dev/shm/ShM.*`, and runs the packaged binary against it.
 
-The Debian binary package is intentionally named **apachetop**, even though Debian already has a different package with that name. The Debian package version uses epoch `1:` so this build is not treated as a downgrade purely because it has the same package name.
+The Debian binary package is intentionally named **apachetop**, even though Debian already has a different package with that name. The Debian package version uses epoch `1:` so this build is not treated as a downgrade purely because it has the same package name. Release assets are named with their target suite, for example `apachetop_0.1.0-1_bookworm_amd64.deb` and `apachetop_0.1.0-1_trixie_amd64.deb`.
 
 See the [Debian package workflow](../../actions/workflows/debian.yml) for builds. Published versions are available under [GitHub Releases](../../releases).
 
