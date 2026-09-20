@@ -1,7 +1,7 @@
 /*
  * apachetop - Apache HTTP Server scoreboard monitor
  *
- * Copyright (C) 2026 apachetop contributors
+ * Copyright (C) 2026 Iwik
  *
  * SPDX-License-Identifier: GPL-3.0-only
  *
