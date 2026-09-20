@@ -1,0 +1,20 @@
+Source: apachetop
+Section: admin
+Priority: optional
+Maintainer: apachetop contributors <noreply@invalid.example>
+Build-Depends: debhelper-compat (= 13), apache2-dev
+Standards-Version: 4.6.2
+Homepage: https://github.com/iwikus/apachetop
+Rules-Requires-Root: no
+
+Package: apachetop-scoreboard
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: apache2
+Description: Direct Apache HTTP Server scoreboard monitor
+ apachetop reads the Apache httpd scoreboard directly from the APR
+ shared-memory object instead of requesting /server-status over HTTP.
+ .
+ It displays worker state, client IP, vhost, request, age and aggregate
+ request/byte counters. It can remain useful when an overloaded Apache
+ instance has no workers available to serve a web request to /server-status.
