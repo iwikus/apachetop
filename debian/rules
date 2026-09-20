@@ -1,0 +1,14 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+%:
+	dh $@
+
+override_dh_auto_build:
+	$(CC) $(CPPFLAGS) $(CFLAGS) -std=gnu11 -Wall -Wextra -Wpedantic \
+		-I/usr/include/apache2 -I/usr/include/apr-1.0 \
+		$(LDFLAGS) apachetop.c -o apachetop-scoreboard
+
+override_dh_auto_clean:
+	rm -f apachetop-scoreboard
