@@ -101,4 +101,6 @@ The scoreboard contains worker/process state, counters, client/vhost/request inf
 
 ## License
 
-License: TBD.
+apachetop is licensed under the **GNU General Public License v3.0 only (GPL-3.0-only)**.
+
+The Apache HTTP Server headers used at build time remain licensed by the Apache Software Foundation under their own license; they are an external build dependency and are not relicensed by apachetop.
