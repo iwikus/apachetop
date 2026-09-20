@@ -1,0 +1,209 @@
+.TH APACHETOP 1 "September 2026" "apachetop 0.1.0" "User Commands"
+.SH NAME
+apachetop - Apache HTTP Server scoreboard monitor
+.SH SYNOPSIS
+.B apachetop
+.RB [ -f " " PATH ]
+.RB [ -i " " SEC ]
+.RB [ -t " " SEC ]
+.RB [ -n " " ROWS ]
+.RB [ -s " " SORT ]
+.RB [ -a ]
+.RB [ -A ]
+.RB [ -1 ]
+.RB [ -r ]
+.RB [ -d ]
+.RB [ -v ]
+.br
+.B apachetop --version
+.SH DESCRIPTION
+.B apachetop
+is a read-only terminal monitor for the Apache HTTP Server scoreboard.
+It reads the scoreboard directly from the APR shared-memory object instead
+of requesting
+.B /server-status
+over HTTP.
+
+This is useful on overloaded Apache installations where
+.B /server-status
+may be unavailable because all Apache workers are busy serving requests.
+The program can inspect the shared-memory scoreboard without requiring
+another HTTP request to be served by Apache.
+
+The program uses Apache's own
+.B scoreboard.h
+structures and derives the shared-memory layout from the installed Apache
+headers rather than duplicating the scoreboard structure definitions.
+.SH REQUIREMENTS
+Apache must make its scoreboard available through a shared-memory file.
+The Apache configuration must have
+.B mod_status
+loaded,
+.B ExtendedStatus On
+enabled, and a
+.B ScoreboardFile
+setting pointing to the scoreboard file.
+
+For example:
+.PP
+.nf
+LoadModule status_module /usr/lib/apache2/modules/mod_status.so
+ExtendedStatus On
+ScoreboardFile /dev/shm/scoreboard
+.fi
+.PP
+The exact
+.B LoadModule
+path depends on the distribution and package layout.
+.SH OPTIONS
+.TP
+.BI -f " PATH"
+Use the specified scoreboard file instead of automatically searching
+.B /dev/shm/ShM.* .
+.TP
+.BI -i " SEC"
+Set the refresh interval in seconds. The default is 1.0 seconds.
+Values below 0.1 seconds are clamped to 0.1 seconds.
+.TP
+.BI -t " SEC"
+Alias for
+.BR -i .
+.TP
+.BI -n " ROWS"
+Set the maximum number of rows displayed in each section.
+Without this option the number of rows is fitted automatically to the
+terminal height.
+.TP
+.BI -s " SORT"
+Sort the main worker table. Supported values are:
+.BR slot ,
+.BR age ,
+.BR client
+(or
+.BR ip ),
+and
+.BR vhost
+(or
+.BR host ).
+The default is
+.BR slot .
+With
+.BR age ,
+newest workers are shown first.
+.TP
+.B -a
+Show only active workers.
+.TP
+.B -A
+Show all scoreboard slots, including unused or dead slots with PID 0.
+.TP
+.B -1
+Display one snapshot and exit.
+.TP
+.B -r
+Show the recent/last-request section in addition to the main worker table.
+.TP
+.B -d
+Show calculated Apache/APR scoreboard layout information.
+.TP
+.B -v
+Print the application version and exit.
+.TP
+.B --version
+Print the application version and exit.
+.TP
+.B -h
+Show usage information.
+.SH DISPLAY
+The main table includes the scoreboard slot, process ID, worker state,
+worker age, client address, virtual host, and current request.
+
+The status characters include:
+.PP
+.nf
+R  reading the request from the client
+W  processing/writing a response
+K  keepalive
+L  logging
+D  DNS lookup
+C  closing
+G  graceful
+_  ready/idle worker
+.fi
+.PP
+The header also shows aggregate request and byte counters, request rate,
+byte rate, and the number of active workers.
+
+Unused
+.B SERVER_DEAD
+slots with PID 0 are hidden by default. Use
+.B -A
+to include them.
+.SH FILES
+.TP
+.B /dev/shm/ShM.*
+Apache APR shared-memory scoreboard objects that are automatically detected
+when no explicit path is supplied.
+.TP
+.B /dev/shm/scoreboard
+Example path for an Apache
+.B ScoreboardFile
+configuration. The actual path is determined by the Apache configuration.
+.SH EXAMPLES
+.TP
+.B apachetop
+Automatically find the scoreboard and refresh every second.
+.TP
+.B apachetop -i 2
+Refresh every two seconds.
+.TP
+.B apachetop -a
+Show only active workers.
+.TP
+.B apachetop -A
+Show all scoreboard slots.
+.TP
+.B apachetop -s age
+Sort workers by age, newest first.
+.TP
+.B apachetop -r
+Show recent/last requests.
+.TP
+.B apachetop -1
+Print one snapshot and exit.
+.TP
+.B apachetop -f /dev/shm/scoreboard
+Use an explicitly configured scoreboard file.
+.SH EXIT STATUS
+.TP
+.B 0
+Successful operation or a successful
+.B -v ,
+.B --version ,
+or
+.B -h
+operation.
+.TP
+.B 1
+No usable scoreboard was found or the scoreboard could not be opened.
+.TP
+.B 2
+Invalid command-line arguments.
+.SH NOTES
+The scoreboard is a live state interface, not an access log. It does not
+provide historical per-URL statistics.
+
+If no scoreboard can be found automatically, verify that Apache's
+configuration contains a valid
+.B ScoreboardFile
+setting and that the configured file is readable by the user running
+.BR apachetop .
+.PP
+The Debian/Ubuntu packages are built for the distributions listed in the
+project documentation and install this manual page as
+.BR apachetop (1).
+.SH AUTHOR
+apachetop contributors.
+.SH LICENSE
+apachetop is licensed under the GNU General Public License version 3 only
+(GPL-3.0-only).
