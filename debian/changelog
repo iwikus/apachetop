@@ -1,3 +1,11 @@
+apachetop (1:0.1.0-1) unstable; urgency=medium
+
+  * Use the apachetop binary package name.
+  * Add application version reporting via -v and --version.
+  * Document Semantic Versioning and Debian package epochs.
+
+ -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 12:30:00 +0200
+
 apachetop (0.1.0-2) unstable; urgency=medium
 
   * License apachetop under GPL-3.0-only.
