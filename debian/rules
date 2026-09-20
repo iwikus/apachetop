@@ -11,4 +11,4 @@ override_dh_auto_build:
 		$(LDFLAGS) apachetop.c -o apachetop
 
 override_dh_auto_clean:
-	rm -f apachetop-scoreboard
+	rm -f apachetop
