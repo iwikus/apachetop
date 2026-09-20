@@ -7,7 +7,7 @@ Standards-Version: 4.6.2
 Homepage: https://github.com/iwikus/apachetop
 Rules-Requires-Root: no
 
-Package: apachetop-scoreboard
+Package: apachetop
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: apache2
