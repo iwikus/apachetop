@@ -1,5 +1,7 @@
 # apachetop
 
+**Version: 0.1.0**
+
 A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/`apachetop`.
 
 `apachetop` reads the Apache scoreboard directly from the APR shared-memory object in `/dev/shm/ShM.*`. It does not scrape `/server-status` over HTTP.
@@ -52,9 +54,21 @@ gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
 
 GitHub Actions builds and tests the Debian package on **Debian 12 (Bookworm)** and **Debian 13 (Trixie)**. The CI test runs Apache with the **prefork MPM**, loads **mod_status**, enables **ExtendedStatus On**, starts Apache, locates the real scoreboard under `/dev/shm/ShM.*`, and runs the packaged binary against it.
 
-The generated Debian package is named **apachetop-scoreboard** to avoid colliding with Debian's existing **apachetop** package, which is a different log-based monitoring tool.
+The Debian binary package is intentionally named **apachetop**, even though Debian already has a different package with that name. The Debian package version uses epoch `1:` so this build is not treated as a downgrade purely because it has the same package name.
 
 See the [Debian package workflow](../../actions/workflows/debian.yml) for builds and downloadable artifacts.
+
+## Versioning
+
+The application follows **Semantic Versioning**. The current release is **0.1.0** and the binary reports it with `-v` or `--version`:
+
+```bash
+./apachetop --version
+```
+
+The Debian package uses the normal Debian `upstream-version-debian-revision` scheme with epoch `1:` because the package name intentionally overlaps Debian's existing `apachetop` package. For example, application version `0.1.0` is packaged as `1:0.1.0-1`.
+
+Use the upstream version for releases; increment the Debian revision for packaging-only changes.
 
 ## Usage
 
@@ -84,6 +98,8 @@ See the [Debian package workflow](../../actions/workflows/debian.yml) for builds
 -1        display once and exit
 -r        show recent/last-request section
 -d        show calculated Apache/APR layout information
+-v        show version
+--version show version
 -h        show help
 ```
 
