@@ -2,14 +2,14 @@ apachetop (1:0.1.0-3) unstable; urgency=medium
 
   * Add the apachetop(1) manual page.
 
- -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 14:15:00 +0200
+ -- Iwik <iwik@iwik.org>  Sun, 20 Sep 2026 14:15:00 +0200
 
 apachetop (1:0.1.0-2) unstable; urgency=medium
 
   * Depend on apache2 at runtime.
   * Give a hint about ScoreBoardFile when /dev/shm/ShM.* is not found.
 
- -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 12:55:00 +0200
+ -- Iwik <iwik@iwik.org>  Sun, 20 Sep 2026 12:55:00 +0200
 
 apachetop (1:0.1.0-1) unstable; urgency=medium
 
@@ -17,17 +17,17 @@ apachetop (1:0.1.0-1) unstable; urgency=medium
   * Add application version reporting via -v and --version.
   * Document Semantic Versioning and Debian package epochs.
 
- -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 12:30:00 +0200
+ -- Iwik <iwik@iwik.org>  Sun, 20 Sep 2026 12:30:00 +0200
 
 apachetop (0.1.0-2) unstable; urgency=medium
 
   * License apachetop under GPL-3.0-only.
   * Add the complete GPLv3 license text.
 
- -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 12:15:00 +0200
+ -- Iwik <iwik@iwik.org>  Sun, 20 Sep 2026 12:15:00 +0200
 
 apachetop (0.1.0-1) unstable; urgency=medium
 
   * Initial Debian package for apachetop scoreboard monitor.
 
- -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 12:00:00 +0200
+ -- Iwik <iwik@iwik.org>  Sun, 20 Sep 2026 12:00:00 +0200
