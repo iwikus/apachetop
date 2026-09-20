@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: *
+Copyright: 2026 apachetop contributors
+License: TBD
+ The upstream project license has not yet been selected.
+ This package is intended as a project-specific CI build artifact,
+ not as a Debian archive-ready package.
