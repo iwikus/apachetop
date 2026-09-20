@@ -37,6 +37,14 @@ The exact `LoadModule` path depends on the distribution/package layout.
 
 ## Build
 
+Install the build dependencies on Debian/Ubuntu:
+
+```bash
+apt install apache2-dev libapr1-dev
+```
+
+Then build:
+
 ```bash
 gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
   -I/usr/include/apache2 \
