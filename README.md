@@ -4,7 +4,7 @@
 
 A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/`apachetop`.
 
-`apachetop` reads the Apache scoreboard directly from the APR shared-memory object in `/dev/shm/ShM.*`. It does not scrape `/server-status` over HTTP.
+`apachetop` reads the Apache scoreboard directly from the APR shared-memory object. It does not scrape `/server-status` over HTTP; `/server-status` may be unavailable when Apache is fully saturated and all workers are busy.
 
 ![apachetop screenshot](docs/screenshot.png)
 
@@ -23,19 +23,14 @@ A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/
 
 ## Requirements
 
-The Apache scoreboard must be available. This project is intended for Apache httpd installations with **`mod_status` loaded and `ExtendedStatus On`**. The Debian package depends on `apache2` (>= 2.4).
+The Apache scoreboard must be available. Apache must have **`mod_status` loaded**, **`ExtendedStatus On`**, and a **`ScoreboardFile`** pointing to the scoreboard shared-memory file.
 
-On Debian/Ubuntu:
-
-```bash
-apt install apache2-dev libapr1-dev
-```
-
-Enable `mod_status` and extended status in Apache:
+For example:
 
 ```apache
 LoadModule status_module /usr/lib/apache2/modules/mod_status.so
 ExtendedStatus On
+ScoreboardFile /dev/shm/scoreboard
 ```
 
 The exact `LoadModule` path depends on the distribution/package layout.
@@ -52,11 +47,17 @@ gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
 
 ## Debian packages
 
-GitHub Actions builds and tests the package on **Debian 12 (Bookworm)**, **Debian 13 (Trixie)**, and the currently standard-supported Ubuntu LTS releases **22.04 (Jammy)**, **24.04 (Noble)**, and **26.04 (Resolute)**. The CI test runs Apache with the **prefork MPM**, loads **mod_status**, enables **ExtendedStatus On**, starts Apache, locates the real scoreboard under `/dev/shm/ShM.*`, and runs the packaged binary against it.
+Prebuilt Debian/Ubuntu packages are published in [GitHub Releases](../../releases).
 
+Supported distributions:
 
+- Debian 12 (Bookworm)
+- Debian 13 (Trixie)
+- Ubuntu 22.04 LTS (Jammy)
+- Ubuntu 24.04 LTS (Noble)
+- Ubuntu 26.04 LTS (Resolute)
 
-See the [Debian package workflow](../../actions/workflows/debian.yml) for builds. Published versions are available under [GitHub Releases](../../releases).
+The packages are built and tested by GitHub Actions.
 
 ## Versioning
 
@@ -66,7 +67,7 @@ The application follows **Semantic Versioning**. The current release is **0.1.0*
 ./apachetop --version
 ```
 
-The Debian package uses the normal Debian `upstream-version-debian-revision` scheme with epoch `1:` because the package name intentionally overlaps Debian's existing `apachetop` package. For example, application version `0.1.0` is packaged as `1:0.1.0-1`.
+The Debian package uses the normal Debian `upstream-version-debian-revision` scheme with epoch `1:` because the package name intentionally overlaps Debian's existing `apachetop` package. For example, application version `0.1.0` is packaged as `1:0.1.0-2`.
 
 Use the upstream version for releases; increment the Debian revision for packaging-only changes.
 
