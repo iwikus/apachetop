@@ -82,17 +82,18 @@ jobs:
       - name: Test packaged binary when named SHM scoreboard is available
         run: |
           if ls /dev/shm/ShM.* >/dev/null 2>&1; then
-            DEB=$(ls -1 ../apachetop-scoreboard_*.deb | head -n1)
+            DEB=$(ls -1 ../apachetop_*.deb | head -n1)
             mkdir -p /tmp/pkg
             dpkg-deb -x "$DEB" /tmp/pkg
 
             SHM=$(ls -1 /dev/shm/ShM.* | head -n1)
-            timeout 5 /tmp/pkg/usr/bin/apachetop-scoreboard -1 -f "$SHM" > /tmp/apachetop.out
+            timeout 5 /tmp/pkg/usr/bin/apachetop -1 -f "$SHM" > /tmp/apachetop.out
 
             grep -q '^ApacheTop scoreboard' /tmp/apachetop.out
             grep -q '^Apache layout:' /tmp/apachetop.out
             grep -q '^Requests:' /tmp/apachetop.out
             grep -q '^States:' /tmp/apachetop.out
+            /tmp/pkg/usr/bin/apachetop --version | grep -q '^apachetop 0\\.1\\.0$
 
             cat /tmp/apachetop.out
           else
@@ -103,12 +104,12 @@ jobs:
       - name: Stage Debian package for artifact upload
         run: |
           mkdir -p artifacts
-          cp ../apachetop-scoreboard_*.deb artifacts/
+          cp ../apachetop_*.deb artifacts/
           ls -lh artifacts/
 
       - name: Upload Debian package
         uses: actions/upload-artifact@v4
         with:
-          name: apachetop-scoreboard-${{ matrix.suite }}
+          name: apachetop-${{ matrix.suite }}
           path: artifacts/*.deb
           if-no-files-found: error
