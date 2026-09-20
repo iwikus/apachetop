@@ -1,0 +1,12 @@
+apachetop-scoreboard for Debian
+================================
+
+This package contains the apachetop scoreboard monitor.
+
+The tool is intended to run on the same host as Apache httpd and reads
+the Apache scoreboard directly from /dev/shm/ShM.*.
+
+Apache must have mod_status loaded and ExtendedStatus On.
+
+The GitHub CI build also tests the binary against Debian 12 and Debian 13
+with the Apache prefork MPM.
