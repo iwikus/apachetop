@@ -1,3 +1,9 @@
+apachetop (1:0.1.0-3) unstable; urgency=medium
+
+  * Add the apachetop(1) manual page.
+
+ -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 14:15:00 +0200
+
 apachetop (1:0.1.0-2) unstable; urgency=medium
 
   * Depend on apache2 at runtime.
