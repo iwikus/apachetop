@@ -1,8 +1,10 @@
-apachetop (1:0.1.0-3) unstable; urgency=medium
+apachetop (1:0.1.0-4) unstable; urgency=medium
 
+  * Add project author attribution and GitHub project link.
+  * Use Iwik <iwik@iwik.org> as the Debian package maintainer.
   * Add the apachetop(1) manual page.
 
- -- Iwik <iwik@iwik.org>  Sun, 20 Sep 2026 14:15:00 +0200
+ -- Iwik <iwik@iwik.org>  Sun, 20 Sep 2026 14:20:00 +0200
 
 apachetop (1:0.1.0-2) unstable; urgency=medium
 
