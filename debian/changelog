@@ -1,0 +1,5 @@
+apachetop (0.1.0-1) unstable; urgency=medium
+
+  * Initial Debian package for apachetop scoreboard monitor.
+
+ -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 12:00:00 +0200
