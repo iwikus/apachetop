@@ -56,7 +56,7 @@ GitHub Actions builds and tests the Debian package on **Debian 12 (Bookworm)** a
 
 The Debian binary package is intentionally named **apachetop**, even though Debian already has a different package with that name. The Debian package version uses epoch `1:` so this build is not treated as a downgrade purely because it has the same package name.
 
-See the [Debian package workflow](../../actions/workflows/debian.yml) for builds and downloadable artifacts.
+See the [Debian package workflow](../../actions/workflows/debian.yml) for builds. Published versions are available under [GitHub Releases](../../releases).
 
 ## Versioning
 
