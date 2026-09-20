@@ -852,6 +852,7 @@ int main(int argc, char **argv)
     while (!stop_flag) {
         if (!choose_scoreboard(path, sizeof(path), forced)) {
             fprintf(stderr, "No usable Apache scoreboard found in /dev/shm/ShM.*\n");
+            fprintf(stderr, "Does Apache config contain ScoreBoardFile /dev/shm/scoreboard?\n");
             return 1;
         }
 
