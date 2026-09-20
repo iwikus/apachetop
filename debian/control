@@ -9,8 +9,7 @@ Rules-Requires-Root: no
 
 Package: apachetop
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: apache2
+Depends: ${shlibs:Depends}, ${misc:Depends}, apache2 (>= 2.4)
 Description: Direct Apache HTTP Server scoreboard monitor
  apachetop reads the Apache httpd scoreboard directly from the APR
  shared-memory object instead of requesting /server-status over HTTP.
