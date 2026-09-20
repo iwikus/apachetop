@@ -23,7 +23,7 @@ A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/
 
 ## Requirements
 
-The Apache scoreboard must be available. This project is intended for Apache httpd installations with **`mod_status` loaded and `ExtendedStatus On`**.
+The Apache scoreboard must be available. This project is intended for Apache httpd installations with **`mod_status` loaded and `ExtendedStatus On`**. The Debian package depends on `apache2` (>= 2.4).
 
 On Debian/Ubuntu:
 
