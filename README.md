@@ -4,7 +4,7 @@ A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/
 
 `apachetop` reads the Apache scoreboard directly from the APR shared-memory object in `/dev/shm/ShM.*`. It does not scrape `/server-status` over HTTP.
 
-![apachetop screenshot](docs/screenshot.svg)
+![apachetop screenshot](docs/screenshot.png)
 
 ## Features
 
