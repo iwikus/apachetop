@@ -116,8 +116,9 @@ jobs:
           mkdir -p artifacts
           DEB=$(ls -1 ../apachetop_*.deb | head -n1)
           VERSION=$(dpkg-deb -f "$DEB" Version)
+          FILE_VERSION="${VERSION#*:}"
           ARCH=$(dpkg-deb -f "$DEB" Architecture)
-          cp "$DEB" "artifacts/apachetop_${VERSION}_${{ matrix.suite }}_${ARCH}.deb"
+          cp "$DEB" "artifacts/apachetop_${FILE_VERSION}_${{ matrix.suite }}_${ARCH}.deb"
           ls -lh artifacts/
 
       - name: Upload Debian package
