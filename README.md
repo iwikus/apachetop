@@ -48,6 +48,14 @@ gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
   -o apachetop
 ```
 
+## Debian packages
+
+GitHub Actions builds and tests the Debian package on **Debian 12 (Bookworm)** and **Debian 13 (Trixie)**. The CI test runs Apache with the **prefork MPM**, loads **mod_status**, enables **ExtendedStatus On**, starts Apache, locates the real scoreboard under `/dev/shm/ShM.*`, and runs the packaged binary against it.
+
+The generated Debian package is named **apachetop-scoreboard** to avoid colliding with Debian's existing **apachetop** package, which is a different log-based monitoring tool.
+
+See the [Debian package workflow](../../actions/workflows/debian.yml) for builds and downloadable artifacts.
+
 ## Usage
 
 ```bash
