@@ -5,6 +5,11 @@ on:
     branches: [main]
     tags: ["v*"]
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag to publish (for example v0.1.0)"
+        required: true
+        default: "v0.1.0"
 
 jobs:
   build:
@@ -109,7 +114,10 @@ jobs:
       - name: Stage Debian package for artifact upload
         run: |
           mkdir -p artifacts
-          cp ../apachetop_*.deb artifacts/
+          DEB=$(ls -1 ../apachetop_*.deb | head -n1)
+          VERSION=$(dpkg-deb -f "$DEB" Version)
+          ARCH=$(dpkg-deb -f "$DEB" Architecture)
+          cp "$DEB" "artifacts/apachetop_${VERSION}_${{ matrix.suite }}_${ARCH}.deb"
           ls -lh artifacts/
 
       - name: Upload Debian package
@@ -121,7 +129,7 @@ jobs:
 
   release:
     name: GitHub Release
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -148,5 +156,6 @@ jobs:
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.release_tag || github.ref_name }}
           generate_release_notes: true
           files: release/*.deb
