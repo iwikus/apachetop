@@ -21,7 +21,7 @@
 #define _GNU_SOURCE
 
 /*
- * apachetop-scoreboard.c
+ * apachetop.c
  *
  * Read an Apache httpd scoreboard directly from the APR shared-memory object.
  *
@@ -57,6 +57,7 @@
 
 #include "httpd.h"
 #include "scoreboard.h"
+#include "version.h"
 
 #define SHM_PREFIX "/dev/shm/ShM."
 #define MAX_SLOTS 4096
@@ -750,6 +751,11 @@ static void draw(const struct shm_view *v, struct snapshot *snap,
     fflush(stdout);
 }
 
+static void print_version(void)
+{
+    printf("apachetop %s\\n", APACHETOP_VERSION);
+}
+
 static void usage(const char *prog)
 {
     fprintf(stderr,
@@ -779,8 +785,13 @@ int main(int argc, char **argv)
     bool debug = false;
     enum sort_mode sort_mode = SORT_SLOT;
 
+    if (argc == 2 && strcmp(argv[1], "--version") == 0) {
+        print_version();
+        return 0;
+    }
+
     int opt;
-    while ((opt = getopt(argc, argv, "f:i:t:n:s:1aArdh")) != -1) {
+    while ((opt = getopt(argc, argv, "f:i:t:n:s:1aArdhv")) != -1) {
         switch (opt) {
             case 'f':
                 forced = optarg;
@@ -818,6 +829,9 @@ int main(int argc, char **argv)
             case 'd':
                 debug = true;
                 break;
+            case 'v':
+                print_version();
+                return 0;
             case 'h':
                 usage(argv[0]);
                 return 0;
