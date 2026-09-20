@@ -153,6 +153,25 @@ jobs:
         run: |
           find release -maxdepth 2 -type f -print -exec ls -lh {} \;
 
+      - name: Remove old unqualified package assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ inputs.release_tag || github.ref_name }}"
+          for asset in $(gh release view "$TAG" --json assets --jq '.assets[].name'); do
+            case "$asset" in
+              apachetop_*_amd64.deb)
+                case "$asset" in
+                  *_bookworm_amd64.deb|*_trixie_amd64.deb)
+                    ;;
+                  *)
+                    gh release delete-asset "$TAG" "$asset" --yes
+                    ;;
+                esac
+                ;;
+            esac
+          done
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
