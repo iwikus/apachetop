@@ -1,4 +1,4 @@
-apachetop-scoreboard for Debian
+apachetop for Debian
 ================================
 
 This package contains the apachetop scoreboard monitor.
@@ -10,3 +10,10 @@ Apache must have mod_status loaded and ExtendedStatus On.
 
 The GitHub CI build also tests the binary against Debian 12 and Debian 13
 with the Apache prefork MPM.
+
+Versioning
+----------
+
+The application version follows Semantic Versioning and is reported by
+`apachetop --version`. Debian package versions use epoch 1 to avoid being
+considered older than a distro package with the same name.
