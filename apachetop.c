@@ -753,7 +753,7 @@ static void draw(const struct shm_view *v, struct snapshot *snap,
 
 static void print_version(void)
 {
-    printf("apachetop %s\\n", APACHETOP_VERSION);
+    printf("apachetop %s\n", APACHETOP_VERSION);
 }
 
 static void usage(const char *prog)
@@ -769,7 +769,9 @@ static void usage(const char *prog)
         "  -A        include all scoreboard slots, including unused/dead PID=0 slots\n"
         "  -1        display once and exit\n"
         "  -r        show recent/last-request section\n"
-        "  -d        show calculated header/APR layout information\n",
+        "  -d        show calculated header/APR layout information\n"
+        "  -v        show version\n"
+        "  --version show version\n",
         prog);
 }
 
