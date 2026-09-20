@@ -1,3 +1,10 @@
+apachetop (1:0.1.0-2) unstable; urgency=medium
+
+  * Depend on apache2 at runtime.
+  * Give a hint about ScoreBoardFile when /dev/shm/ShM.* is not found.
+
+ -- apachetop contributors <noreply@invalid.example>  Sun, 20 Sep 2026 12:55:00 +0200
+
 apachetop (1:0.1.0-1) unstable; urgency=medium
 
   * Use the apachetop binary package name.
