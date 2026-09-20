@@ -2,7 +2,7 @@ Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 
 Files: *
 Copyright: 2026 apachetop contributors
-License: GPL-3-only
+License: GPL-3
  The apachetop project is licensed under the GNU General Public License
  version 3, as published by the Free Software Foundation.
  .
