@@ -124,6 +124,13 @@ The scoreboard contains worker/process state, counters, client/vhost/request inf
 
 `-A` is useful when diagnosing the scoreboard layout itself. In normal operation, unused `PID=0` / `SERVER_DEAD` slots are hidden so that reserved capacity does not dominate the display.
 
+## Authors
+
+- Iwik <iwik@iwik.org>
+- ChatGPT (OpenAI)
+
+Project: https://github.com/iwikus/apachetop
+
 ## License
 
 apachetop is licensed under the **GNU General Public License v3.0 only (GPL-3.0-only)**.
