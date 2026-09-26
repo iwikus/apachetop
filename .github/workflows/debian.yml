@@ -180,15 +180,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           TAG="${{ inputs.release_tag || github.ref_name }}"
-          if gh release view "\$TAG" >/dev/null 2>&1; then
-            for asset in \$(gh release view "\$TAG" --json assets --jq '.assets[].name'); do
-              case "\$asset" in
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            for asset in \$(gh release view "$TAG" --json assets --jq '.assets[].name'); do
+              case "$asset" in
                 apachetop_*_amd64.deb)
-                  case "\$asset" in
+                  case "$asset" in
                     *_bookworm_amd64.deb|*_trixie_amd64.deb|*_jammy_amd64.deb|*_noble_amd64.deb|*_resolute_amd64.deb)
                       ;;
                     *)
-                      gh release delete-asset "\$TAG" "\$asset" --yes
+                      gh release delete-asset "$TAG" "$asset" --yes
                       ;;
                   esac
                   ;;
