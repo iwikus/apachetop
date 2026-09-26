@@ -202,3 +202,129 @@ jobs:
           tag_name: ${{ inputs.release_tag || github.ref_name }}
           generate_release_notes: true
           files: release/*.deb
+
+  apt-repository:
+    name: APT repository
+    if: needs.release.result == 'success'
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install repository tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends apt-utils dpkg-dev gnupg
+
+      - name: Build APT repository
+        env:
+          GH_TOKEN: \${{ github.token }}
+          APT_GPG_PRIVATE_KEY: \${{ secrets.APT_GPG_PRIVATE_KEY }}
+          APT_GPG_PASSPHRASE: \${{ secrets.APT_GPG_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+
+          test -n "$APT_GPG_PRIVATE_KEY" || {
+            echo "APT_GPG_PRIVATE_KEY repository secret is not configured."
+            exit 1
+          }
+
+          export GNUPGHOME="$RUNNER_TEMP/gnupg"
+          mkdir -m 700 -p "$GNUPGHOME"
+          printf '%s\n' "$APT_GPG_PRIVATE_KEY" | gpg --batch --import
+
+          KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '$1 == "sec" {print $5; exit}')
+          test -n "$KEY_ID"
+
+          SITE="$RUNNER_TEMP/apachetop-pages"
+          mkdir -p "$SITE/pool/main/a/apachetop"
+          mkdir -p "$SITE/dists"
+
+          echo "Downloading Debian packages from published GitHub releases..."
+          gh release list --limit 100 --json tagName,isDraft,isPrerelease \
+            --jq '.[] | select(.isDraft == false and .isPrerelease == false) | .tagName' |
+          while read -r tag; do
+            [ -n "$tag" ] || continue
+            echo "  $tag"
+            gh release download "$tag" \
+              --pattern 'apachetop_*_amd64.deb' \
+              --dir "$SITE/pool/main/a/apachetop" \
+              --clobber
+          done
+
+          for suite in bookworm trixie jammy noble resolute; do
+            mkdir -p "$SITE/dists/\${suite}/main/binary-amd64"
+            STAGING="$RUNNER_TEMP/scan-\${suite}"
+            rm -rf "$STAGING"
+            mkdir -p "$STAGING/pool/main/a/apachetop"
+
+            find "$SITE/pool/main/a/apachetop" -maxdepth 1 -type f \
+              -name "*_\${suite}_amd64.deb" -exec cp {} "$STAGING/pool/main/a/apachetop/" \;
+
+            test -n "$(find "$STAGING/pool/main/a/apachetop" -type f -name '*.deb' -print -quit)" || {
+              echo "No \${suite} package found in published releases."
+              exit 1
+            }
+
+            (
+              cd "$STAGING"
+              dpkg-scanpackages -m pool /dev/null \
+                > "$SITE/dists/\${suite}/main/binary-amd64/Packages"
+            )
+
+            gzip -9 -c "$SITE/dists/\${suite}/main/binary-amd64/Packages" \
+              > "$SITE/dists/\${suite}/main/binary-amd64/Packages.gz"
+
+            apt-ftparchive \
+              -o APT::FTPArchive::Release::Origin=apachetop \
+              -o APT::FTPArchive::Release::Label=apachetop \
+              -o APT::FTPArchive::Release::Suite="\${suite}" \
+              -o APT::FTPArchive::Release::Codename="\${suite}" \
+              -o APT::FTPArchive::Release::Components=main \
+              -o APT::FTPArchive::Release::Architectures=amd64 \
+              release "$SITE/dists/\${suite}" \
+              > "$SITE/dists/\${suite}/Release"
+
+            gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "$APT_GPG_PASSPHRASE" \
+              --local-user "$KEY_ID" \
+              --armor --detach-sign \
+              --output "$SITE/dists/\${suite}/Release.gpg" \
+              "$SITE/dists/\${suite}/Release"
+
+            gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "$APT_GPG_PASSPHRASE" \
+              --local-user "$KEY_ID" \
+              --clearsign \
+              --output "$SITE/dists/\${suite}/InRelease" \
+              "$SITE/dists/\${suite}/Release"
+          done
+
+          gpg --armor --export "$KEY_ID" > "$SITE/apachetop.gpg"
+
+          cat > "$SITE/index.html" <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <meta charset="utf-8">
+          <title>apachetop APT repository</title>
+          <h1>apachetop APT repository</h1>
+          <p>Packages for Debian and Ubuntu are available through APT.</p>
+          <p>Repository key: <a href="apachetop.gpg">apachetop.gpg</a></p>
+          </html>
+          EOF
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: \${{ runner.temp }}/apachetop-pages
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
