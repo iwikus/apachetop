@@ -310,7 +310,7 @@ jobs:
               "$SITE/dists/${suite}/Release"
           done
 
-          gpg --armor --export "$KEY_ID" > "$SITE/apachetop.gpg"
+          gpg --export "$KEY_ID" > "$SITE/apachetop.gpg"
 
           cat > "$SITE/index.html" <<'EOF'
           <!doctype html>
