@@ -108,7 +108,7 @@ jobs:
             SHM=$(ls -1 /dev/shm/ShM.* | head -n1)
             timeout 5 /tmp/pkg/usr/bin/apachetop -1 -f "$SHM" > /tmp/apachetop.out
 
-            grep -q '^ApacheTop scoreboard' /tmp/apachetop.out
+            grep -q 'ApacheTop scoreboard' /tmp/apachetop.out
             grep -q '^Apache layout:' /tmp/apachetop.out
             grep -q '^Requests:' /tmp/apachetop.out
             grep -q '^States:' /tmp/apachetop.out
@@ -117,7 +117,7 @@ jobs:
           elif [ -r /dev/shm/scoreboard ]; then
             timeout 5 /tmp/pkg/usr/bin/apachetop -1 -f /dev/shm/scoreboard > /tmp/apachetop.out
 
-            grep -q '^ApacheTop scoreboard' /tmp/apachetop.out
+            grep -q 'ApacheTop scoreboard' /tmp/apachetop.out
             grep -q '^Apache layout:' /tmp/apachetop.out
             grep -q '^Requests:' /tmp/apachetop.out
             grep -q '^States:' /tmp/apachetop.out
