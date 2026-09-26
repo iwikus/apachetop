@@ -9,7 +9,7 @@ on:
       release_tag:
         description: "Release tag to publish (for example v0.1.0)"
         required: true
-        default: "v0.1.0"
+        default: "v1.1"
 
 jobs:
   build:
