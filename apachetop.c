@@ -354,6 +354,13 @@ static bool choose_scoreboard(char *out, size_t outsz, const char *forced)
         return false;
     }
 
+    /*
+     * Apache may have more than one APR shared-memory object under /dev/shm.
+     * Do not identify the scoreboard by directory order or filename alone.
+     * Open and validate every candidate using Apache's own scoreboard layout:
+     * APR metadata, global_score, server_limit/thread_limit and the resulting
+     * expected total object size.
+     */
     const char *best_path = NULL;
     off_t best_size = -1;
     time_t best_mtime = 0;
@@ -363,29 +370,26 @@ static bool choose_scoreboard(char *out, size_t outsz, const char *forced)
         if (stat(g.gl_pathv[i], &st) != 0 || !S_ISREG(st.st_mode)) {
             continue;
         }
-        if (st.st_size < 1024) {
+
+        struct shm_view candidate;
+        if (open_view(g.gl_pathv[i], &candidate, false) != 0) {
             continue;
         }
 
-        /* Check only the APR metadata. Full validation happens in open_view(). */
-        int fd = open(g.gl_pathv[i], O_RDONLY | O_CLOEXEC);
-        if (fd < 0) {
-            continue;
-        }
-        apr_size_t stored_size = 0;
-        const ssize_t n = pread(fd, &stored_size, sizeof(stored_size), 0);
-        close(fd);
-        if (n != (ssize_t)sizeof(stored_size) ||
-            (off_t)stored_size != st.st_size) {
-            continue;
-        }
-
-        if (st.st_size > best_size ||
-            (st.st_size == best_size && st.st_mtime > best_mtime)) {
+        /*
+         * A valid Apache scoreboard is expected to be self-consistent.
+         * If several valid scoreboards exist, retain the previous deterministic
+         * preference for the largest object, then newest mtime.
+         */
+        if ((off_t)candidate.map_size > best_size ||
+            ((off_t)candidate.map_size == best_size &&
+             st.st_mtime > best_mtime)) {
             best_path = g.gl_pathv[i];
-            best_size = st.st_size;
+            best_size = (off_t)candidate.map_size;
             best_mtime = st.st_mtime;
         }
+
+        close_view(&candidate);
     }
 
     if (best_path) {
