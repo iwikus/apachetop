@@ -181,7 +181,7 @@ jobs:
         run: |
           TAG="${{ inputs.release_tag || github.ref_name }}"
           if gh release view "$TAG" >/dev/null 2>&1; then
-            for asset in \$(gh release view "$TAG" --json assets --jq '.assets[].name'); do
+            for asset in $(gh release view "$TAG" --json assets --jq '.assets[].name'); do
               case "$asset" in
                 apachetop_*_amd64.deb)
                   case "$asset" in
