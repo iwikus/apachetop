@@ -71,7 +71,7 @@ The packages are built and tested by GitHub Actions.
 
 ### APT repository
 
-The GitHub Actions workflow publishes the APT repository through GitHub Pages after the one-time GitHub Pages and GPG signing setup is completed:
+The GitHub Actions workflow publishes the APT repository through GitHub Pages:
 
 `https://iwikus.github.io/apachetop/`
 
