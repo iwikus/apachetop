@@ -75,31 +75,19 @@ The GitHub Actions workflow publishes the APT repository through GitHub Pages af
 
 `https://iwikus.github.io/apachetop/`
 
-The repository is signed with a dedicated GPG key. The following commands detect the Debian/Ubuntu codename from `/etc/os-release` and configure the matching repository automatically:
+The following single command detects the Debian/Ubuntu codename and configures the matching repository automatically:
 
 ```bash
-. /etc/os-release
-
-case "${VERSION_CODENAME:-}" in
-  bookworm|trixie|jammy|noble|resolute)
-    ;;
-  *)
-    echo "Unsupported Debian/Ubuntu release: ${PRETTY_NAME:-unknown} (${VERSION_CODENAME:-unknown})" >&2
-    exit 1
-    ;;
-esac
-
+CODENAME=$(. /etc/os-release && printf '%s' "${VERSION_CODENAME:-${UBUNTU_CODENAME:-}}") && \
 curl -fsSL https://iwikus.github.io/apachetop/apachetop.gpg \
-  | sudo tee /usr/share/keyrings/apachetop.gpg >/dev/null
-
-echo "deb [signed-by=/usr/share/keyrings/apachetop.gpg] https://iwikus.github.io/apachetop ${VERSION_CODENAME} main" \
-  | sudo tee /etc/apt/sources.list.d/apachetop.list >/dev/null
-
-sudo apt update
+  | sudo tee /usr/share/keyrings/apachetop.gpg >/dev/null && \
+echo "deb [signed-by=/usr/share/keyrings/apachetop.gpg] https://iwikus.github.io/apachetop ${CODENAME} main" \
+  | sudo tee /etc/apt/sources.list.d/apachetop.list >/dev/null && \
+sudo apt update && \
 sudo apt install apachetop
 ```
 
-Supported codenames are `bookworm`, `trixie`, `jammy`, `noble`, and `resolute`.
+Supported distributions are Debian 12 (Bookworm), Debian 13 (Trixie), Ubuntu 22.04 LTS (Jammy), Ubuntu 24.04 LTS (Noble), and Ubuntu 26.04 LTS (Resolute).
 
 ## Versioning
 
