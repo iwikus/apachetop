@@ -100,7 +100,110 @@ jobs:
           dpkg-deb -f "$DEB" Package | grep -qx apachetop
           dpkg-deb -f "$DEB" Version
 
-          /tmp/pkg/usr/bin/apachetop --version | grep -q '^apachetop 0\.1\.0$'
+          /tmp/pkg/usr/bin/apachetop --version | grep -q '^apachetop 1\.1
+
+          if ls /dev/shm/ShM.* >/dev/null 2>&1; then
+            SHM=$(ls -1 /dev/shm/ShM.* | head -n1)
+            timeout 5 /tmp/pkg/usr/bin/apachetop -1 -f "$SHM" > /tmp/apachetop.out
+
+            grep -q '^ApacheTop scoreboard' /tmp/apachetop.out
+            grep -q '^Apache layout:' /tmp/apachetop.out
+            grep -q '^Requests:' /tmp/apachetop.out
+            grep -q '^States:' /tmp/apachetop.out
+
+            cat /tmp/apachetop.out
+          else
+            echo "Debian Apache did not expose a named /dev/shm/ShM.* scoreboard in this CI image."
+            echo "Compile/package and mod_status tests passed; direct SHM integration is skipped."
+          fi
+
+      - name: Stage Debian package for artifact upload
+        run: |
+          mkdir -p artifacts
+          DEB=$(ls -1 ../apachetop_*.deb | head -n1)
+          VERSION=$(dpkg-deb -f "$DEB" Version)
+          FILE_VERSION="${VERSION#*:}"
+          ARCH=$(dpkg-deb -f "$DEB" Architecture)
+          cp "$DEB" "artifacts/apachetop_${FILE_VERSION}_${{ matrix.suite }}_${ARCH}.deb"
+          ls -lh artifacts/
+
+      - name: Upload Debian package
+        uses: actions/upload-artifact@v4
+        with:
+          name: apachetop-${{ matrix.suite }}
+          path: artifacts/*.deb
+          if-no-files-found: error
+
+  release:
+    name: GitHub Release
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+
+    steps:
+      - name: Download Bookworm package
+        uses: actions/download-artifact@v4
+        with:
+          name: apachetop-bookworm
+          path: release
+
+      - name: Download Trixie package
+        uses: actions/download-artifact@v4
+        with:
+          name: apachetop-trixie
+          path: release
+
+      - name: Download Jammy package
+        uses: actions/download-artifact@v4
+        with:
+          name: apachetop-jammy
+          path: release
+
+      - name: Download Noble package
+        uses: actions/download-artifact@v4
+        with:
+          name: apachetop-noble
+          path: release
+
+      - name: Download Resolute package
+        uses: actions/download-artifact@v4
+        with:
+          name: apachetop-resolute
+          path: release
+
+      - name: List release files
+        run: |
+          find release -maxdepth 2 -type f -print -exec ls -lh {} \;
+
+      - name: Remove old unqualified package assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ inputs.release_tag || github.ref_name }}"
+          for asset in $(gh release view "$TAG" --json assets --jq '.assets[].name'); do
+            case "$asset" in
+              apachetop_*_amd64.deb)
+                case "$asset" in
+                  *_bookworm_amd64.deb|*_trixie_amd64.deb)
+                    ;;
+                  *)
+                    gh release delete-asset "$TAG" "$asset" --yes
+                    ;;
+                esac
+                ;;
+            esac
+          done
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.release_tag || github.ref_name }}
+          generate_release_notes: true
+          files: release/*.deb
+
 
           if ls /dev/shm/ShM.* >/dev/null 2>&1; then
             SHM=$(ls -1 /dev/shm/ShM.* | head -n1)
