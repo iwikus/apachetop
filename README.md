@@ -19,7 +19,7 @@ A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/
 - Automatically fits the number of displayed rows to the terminal height.
 - Optional recent/last-request view.
 - Configurable refresh interval.
-- Can explicitly select a scoreboard file or auto-detect `/dev/shm/ShM.*`.
+- Can explicitly select a scoreboard file or auto-detect and validate `/dev/shm/ShM.*` candidates.
 
 ## Requirements
 
@@ -34,6 +34,8 @@ ScoreboardFile /dev/shm/scoreboard
 ```
 
 The exact `LoadModule` path depends on the distribution/package layout.
+
+When multiple `/dev/shm/ShM.*` files exist, apachetop validates candidates against the Apache scoreboard layout and selects a valid scoreboard rather than relying on directory order.
 
 ## Build
 
