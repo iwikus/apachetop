@@ -58,7 +58,6 @@ jobs:
           cat >/etc/apache2/conf-available/apachetop-ci.conf <<'EOF'
           ServerName localhost
           ExtendedStatus On
-          ScoreboardFile /dev/shm/scoreboard
           EOF
 
           a2enconf apachetop-ci
@@ -107,15 +106,6 @@ jobs:
           if ls /dev/shm/ShM.* >/dev/null 2>&1; then
             SHM=$(ls -1 /dev/shm/ShM.* | head -n1)
             timeout 5 /tmp/pkg/usr/bin/apachetop -1 -f "$SHM" > /tmp/apachetop.out
-
-            grep -q 'ApacheTop scoreboard' /tmp/apachetop.out
-            grep -q '^Apache layout:' /tmp/apachetop.out
-            grep -q '^Requests:' /tmp/apachetop.out
-            grep -q '^States:' /tmp/apachetop.out
-
-            cat /tmp/apachetop.out
-          elif [ -r /dev/shm/scoreboard ]; then
-            timeout 5 /tmp/pkg/usr/bin/apachetop -1 -f /dev/shm/scoreboard > /tmp/apachetop.out
 
             grep -q 'ApacheTop scoreboard' /tmp/apachetop.out
             grep -q '^Apache layout:' /tmp/apachetop.out
