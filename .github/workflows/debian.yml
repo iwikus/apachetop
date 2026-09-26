@@ -251,12 +251,12 @@ jobs:
           mkdir -p "$SITE/dists"
 
           echo "Downloading Debian packages from published GitHub releases..."
-          gh release list --limit 100 --json tagName,isDraft,isPrerelease \
+          gh release list --repo "$GITHUB_REPOSITORY" --limit 100 --json tagName,isDraft,isPrerelease \
             --jq '.[] | select(.isDraft == false and .isPrerelease == false) | .tagName' |
           while read -r tag; do
             [ -n "$tag" ] || continue
             echo "  $tag"
-            gh release download "$tag" \
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" \
               --pattern 'apachetop_*_amd64.deb' \
               --dir "$SITE/pool/main/a/apachetop" \
               --clobber
