@@ -1,6 +1,6 @@
 # apachetop
 
-**Version: 0.1.0**
+**Version: 1.1**
 
 A lightweight, read-only Apache HTTP Server scoreboard viewer inspired by `top`/`apachetop`.
 
@@ -71,13 +71,13 @@ The packages are built and tested by GitHub Actions.
 
 ## Versioning
 
-The application follows **Semantic Versioning**. The current release is **0.1.0** and the binary reports it with `-v` or `--version`:
+The application follows **Semantic Versioning**. The current release is **1.1** and the binary reports it with `-v` or `--version`:
 
 ```bash
 ./apachetop --version
 ```
 
-The Debian package uses the normal Debian `upstream-version-debian-revision` scheme with epoch `1:` because the package name intentionally overlaps Debian's existing `apachetop` package. For example, application version `0.1.0` is packaged as `1:0.1.0-2`.
+The Debian package uses the normal Debian `upstream-version-debian-revision` scheme with epoch `1:` because the package name intentionally overlaps Debian's existing `apachetop` package. For example, application version `1.1` is packaged as `1:1.1-1`.
 
 Use the upstream version for releases; increment the Debian revision for packaging-only changes.
 
