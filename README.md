@@ -75,22 +75,31 @@ The GitHub Actions workflow publishes the APT repository through GitHub Pages af
 
 `https://iwikus.github.io/apachetop/`
 
-The repository is signed with a dedicated GPG key. Import the public key and add the source for your distribution:
-
-#### Debian 12 Bookworm
+The repository is signed with a dedicated GPG key. The following commands detect the Debian/Ubuntu codename from `/etc/os-release` and configure the matching repository automatically:
 
 ```bash
+. /etc/os-release
+
+case "${VERSION_CODENAME:-}" in
+  bookworm|trixie|jammy|noble|resolute)
+    ;;
+  *)
+    echo "Unsupported Debian/Ubuntu release: ${PRETTY_NAME:-unknown} (${VERSION_CODENAME:-unknown})" >&2
+    exit 1
+    ;;
+esac
+
 curl -fsSL https://iwikus.github.io/apachetop/apachetop.gpg \
   | sudo tee /usr/share/keyrings/apachetop.gpg >/dev/null
 
-echo "deb [signed-by=/usr/share/keyrings/apachetop.gpg] https://iwikus.github.io/apachetop bookworm main" \
-  | sudo tee /etc/apt/sources.list.d/apachetop.list
+echo "deb [signed-by=/usr/share/keyrings/apachetop.gpg] https://iwikus.github.io/apachetop ${VERSION_CODENAME} main" \
+  | sudo tee /etc/apt/sources.list.d/apachetop.list >/dev/null
 
 sudo apt update
 sudo apt install apachetop
 ```
 
-Use `trixie`, `jammy`, `noble`, or `resolute` in the source line for the corresponding distribution.
+Supported codenames are `bookworm`, `trixie`, `jammy`, `noble`, and `resolute`.
 
 ## Versioning
 
