@@ -213,6 +213,9 @@ jobs:
       actions: read
       pages: write
       id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Configure GitHub Pages
@@ -321,7 +324,7 @@ jobs:
           EOF
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ${{ runner.temp }}/apachetop-pages
 
