@@ -1,3 +1,11 @@
+apachetop (1:0.1.0-5) unstable; urgency=medium
+
+  * Validate all /dev/shm/ShM.* candidates during scoreboard autodetection.
+  * Do not rely on shared-memory directory order when multiple objects exist.
+  * Document the improved autodetection behavior.
+
+ -- Iwik <iwik@iwik.org>  Sat, 26 Sep 2026 21:12:00 +0200
+
 apachetop (1:0.1.0-4) unstable; urgency=medium
 
   * Add project author attribution and GitHub project link.
