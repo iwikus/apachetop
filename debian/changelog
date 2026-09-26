@@ -1,3 +1,11 @@
+apachetop (1:1.1-1) unstable; urgency=medium
+
+  * Release apachetop 1.1.
+  * Improve scoreboard autodetection when multiple shared-memory objects exist.
+  * Add the apachetop(1) manual page and updated package documentation.
+
+ -- Iwik <iwik@iwik.org>  Sat, 26 Sep 2026 21:20:00 +0200
+
 apachetop (1:0.1.0-5) unstable; urgency=medium
 
   * Validate all /dev/shm/ShM.* candidates during scoreboard autodetection.
