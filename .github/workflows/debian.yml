@@ -100,7 +100,9 @@ jobs:
 
           dpkg-deb -f "$DEB" Package | grep -qx apachetop
           dpkg-deb -f "$DEB" Version
-          /tmp/pkg/usr/bin/apachetop --version | grep -q '^apachetop 1\.1$'
+          VERSION_OUTPUT=$(/tmp/pkg/usr/bin/apachetop --version)
+          echo "apachetop version output: <$VERSION_OUTPUT>"
+          test "$VERSION_OUTPUT" = "apachetop 1.1"
 
           if ls /dev/shm/ShM.* >/dev/null 2>&1; then
             SHM=$(ls -1 /dev/shm/ShM.* | head -n1)
