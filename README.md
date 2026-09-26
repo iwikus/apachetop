@@ -57,7 +57,7 @@ gcc -O2 -Wall -Wextra -Wpedantic -std=c11 \
 
 ## Debian packages
 
-Prebuilt Debian/Ubuntu packages are published in [GitHub Releases](../../releases).
+Prebuilt Debian/Ubuntu packages are published in [GitHub Releases](../../releases) and through the project's APT repository.
 
 Supported distributions:
 
@@ -68,6 +68,29 @@ Supported distributions:
 - Ubuntu 26.04 LTS (Resolute)
 
 The packages are built and tested by GitHub Actions.
+
+### APT repository
+
+The APT repository is published through GitHub Pages:
+
+`https://iwikus.github.io/apachetop/`
+
+The repository is signed with a dedicated GPG key. Import the public key and add the source for your distribution:
+
+#### Debian 12 Bookworm
+
+```bash
+curl -fsSL https://iwikus.github.io/apachetop/apachetop.gpg \
+  | sudo tee /usr/share/keyrings/apachetop.gpg >/dev/null
+
+echo "deb [signed-by=/usr/share/keyrings/apachetop.gpg] https://iwikus.github.io/apachetop bookworm main" \
+  | sudo tee /etc/apt/sources.list.d/apachetop.list
+
+sudo apt update
+sudo apt install apachetop
+```
+
+Use `trixie`, `jammy`, `noble`, or `resolute` in the source line for the corresponding distribution.
 
 ## Versioning
 
