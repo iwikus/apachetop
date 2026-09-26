@@ -55,6 +55,10 @@ ScoreboardFile /dev/shm/scoreboard
 The exact
 .B LoadModule
 path depends on the distribution and package layout.
+.PP
+When multiple
+.B /dev/shm/ShM.*
+files exist, apachetop validates each candidate against the Apache scoreboard layout instead of selecting a file by directory order.
 .SH OPTIONS
 .TP
 .BI -f " PATH"
